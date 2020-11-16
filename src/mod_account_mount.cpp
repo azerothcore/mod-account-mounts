@@ -1,5 +1,6 @@
 #include "Config.h"
 #include "ScriptMgr.h"
+#include "Chat.h"
 
 class AccountMounts : public PlayerScript
 {
