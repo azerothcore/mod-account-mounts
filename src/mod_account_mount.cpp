@@ -1,5 +1,5 @@
 #include "Config.h"
-#include "Player.h"
+#include "ScriptMgr.h"
 
 class AccountMounts : public PlayerScript
 {
