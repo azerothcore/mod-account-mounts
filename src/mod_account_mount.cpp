@@ -59,29 +59,7 @@ public:
 	}
 };
 
-class AccountMountsWorld : public WorldScript
-{
-public:
-	AccountMountsWorld() : WorldScript("AccountMountsWorld") { }
-
-	void OnBeforeConfigLoad(bool reload) override
-	{
-		if (!reload) {
-			std::string conf_path = _CONF_DIR;
-			std::string cfg_file = conf_path + "Settings/modules/mod_account_mount.conf";
-#ifdef WIN32
-			cfg_file = "Settings/modules/mod_account_mount.conf";
-#endif
-			std::string cfg_def_file = cfg_file + ".dist";
-			sConfigMgr->LoadMore(cfg_def_file.c_str());
-
-			sConfigMgr->LoadMore(cfg_file.c_str());
-		}
-	}
-};
-
 void AddAccountMountsScripts()
 {
-    new AccountMountsWorld;
     new AccountMounts;
 }
