@@ -4,4 +4,4 @@ AC_ADD_SCRIPT("${CMAKE_CURRENT_LIST_DIR}/src/mod_account_mount.cpp")
 
 AC_ADD_SCRIPT_LOADER("AccountMounts" "${CMAKE_CURRENT_LIST_DIR}/src/loader_account_mount.h")
 
-CU_ADD_HOOK(AFTER_WORLDSERVER_CMAKE "${CMAKE_CURRENT_LIST_DIR}/src/cmake/after_ws_install.cmake")
+AC_ADD_CONFIG_FILE("${CMAKE_CURRENT_LIST_DIR}/conf/mod_account_mount.conf.dist")
