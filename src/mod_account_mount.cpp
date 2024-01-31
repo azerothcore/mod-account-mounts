@@ -2,17 +2,29 @@
 #include "ScriptMgr.h"
 #include "Chat.h"
 #include "Player.h"
+#include <sstream>
+#include <string>
 
 class AccountMounts : public PlayerScript
 {
     static const bool limitrace = true; // This set to true will only learn mounts from chars on the same team, do what you want.
 
-    // Define a list of SpellIDs to exclude from being learned account-wide.
-    std::set<uint32> excludedSpellIds = {470, 578, 6777, 66847, 17464, 18989, 10969, 10796, 35020, 34406}; // Add the SpellIDs you want to exclude here.
+    // Define a list of SpellIDs in config file to exclude from being learned account-wide.
+    std::set<uint32> excludedSpellIds;
 
 public:
-    AccountMounts() : PlayerScript("AccountMounts") { }
-
+    AccountMounts() : PlayerScript("AccountMounts") 
+    {
+        // Load excluded spell IDs from config
+        std::string excludedSpellsStr = sConfigMgr->GetStringDefault("Account.Mounts.ExcludedSpellIDs", "");
+        std::istringstream spellStream(excludedSpellsStr);
+        std::string spellIdStr;
+        while (std::getline(spellStream, spellIdStr, ',')) {
+            uint32 spellId = std::stoul(spellIdStr);
+            excludedSpellIds.insert(spellId);
+        }
+    }
+    
     void OnLogin(Player* pPlayer)
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))

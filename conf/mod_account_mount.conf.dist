@@ -11,3 +11,7 @@ Account.Mounts.Enable = 1
 # Announce the module when the player logs in?
 
 Account.Mounts.Announce = 0
+
+# Excluded Spell IDs (comma-separated)
+
+Account.Mounts.ExcludedSpellIDs = 470,578,6777,66847,17464,18989,10969,10796,35020,34406
