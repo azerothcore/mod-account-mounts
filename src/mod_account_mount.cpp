@@ -13,7 +13,7 @@ class AccountMounts : public PlayerScript
     std::set<uint32> excludedSpellIds;
 
 public:
-    AccountMounts() : PlayerScript("AccountMounts")
+    AccountMounts() : PlayerScript("AccountMounts") 
     {
         // Load excluded spell IDs from config
         std::string excludedSpellsStr = sConfigMgr->GetStringDefault("Account.Mounts.ExcludedSpellIDs", "");
@@ -24,7 +24,7 @@ public:
             excludedSpellIds.insert(spellId);
         }
     }
-
+    
     void OnLogin(Player* pPlayer)
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))
