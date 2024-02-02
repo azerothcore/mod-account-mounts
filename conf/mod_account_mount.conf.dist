@@ -12,6 +12,7 @@ Account.Mounts.Enable = 1
 
 Account.Mounts.Announce = 0
 
-# Excluded Spell IDs (comma-separated)
+# Excluded Spell IDs (comma-separated, no space). See example below
+# Account.Mounts.ExcludedSpellIDs = 470,578,6777
 
-Account.Mounts.ExcludedSpellIDs = 470,578,6777,66847,17464,18989,10969,10796,35020,34406
+Account.Mounts.ExcludedSpellIDs = 0

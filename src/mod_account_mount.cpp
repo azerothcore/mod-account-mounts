@@ -2,26 +2,31 @@
 #include "ScriptMgr.h"
 #include "Chat.h"
 #include "Player.h"
-#include <sstream>
-#include <string>
+#include <set>         // Required for std::set             -- might be redundant
+#include <sstream>     // Required for std::istringstream   -- might be redundant
+#include <string>      // Required for std::string          -- might be redundant
 
 class AccountMounts : public PlayerScript
 {
     static const bool limitrace = true; // This set to true will only learn mounts from chars on the same team, do what you want.
-
-    // Define a list of SpellIDs in config file to exclude from being learned account-wide.
-    std::set<uint32> excludedSpellIds;
+    std::set<uint32> excludedSpellIds; // Set to hold the Spell IDs to be excluded
 
 public:
-    AccountMounts() : PlayerScript("AccountMounts") 
+    AccountMounts() : PlayerScript("AccountMounts")
     {
-        // Load excluded spell IDs from config
+        // Retrieve the string of excluded Spell IDs from the config file
         std::string excludedSpellsStr = sConfigMgr->GetStringDefault("Account.Mounts.ExcludedSpellIDs", "");
-        std::istringstream spellStream(excludedSpellsStr);
-        std::string spellIdStr;
-        while (std::getline(spellStream, spellIdStr, ',')) {
-            uint32 spellId = std::stoul(spellIdStr);
-            excludedSpellIds.insert(spellId);
+        // Proceed only if the configuration is not "0" or empty, indicating exclusions are specified
+        if (excludedSpellsStr != "0" && !excludedSpellsStr.empty())
+        {
+            std::istringstream spellStream(excludedSpellsStr);
+            std::string spellIdStr;
+            while (std::getline(spellStream, spellIdStr, ',')) {
+                uint32 spellId = static_cast<uint32>(std::stoul(spellIdStr));
+                if (spellId != 0) { // Ensure the spell ID is not 0, as 0 is used to indicate no exclusions
+                    excludedSpellIds.insert(spellId); // Add the Spell ID to the set of exclusions
+                }
+            }
         }
     }
     
