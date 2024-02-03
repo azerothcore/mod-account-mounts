@@ -15,7 +15,7 @@ public:
     AccountMounts() : PlayerScript("AccountMounts")
     {
         // Retrieve the string of excluded Spell IDs from the config file
-        std::string excludedSpellsStr = sConfigMgr->GetStringDefault("Account.Mounts.ExcludedSpellIDs", "");
+        std::string excludedSpellsStr = sConfigMgr->GetOption<std::string>("Account.Mounts.ExcludedSpellIDs", "");
         // Proceed only if the configuration is not "0" or empty, indicating exclusions are specified
         if (excludedSpellsStr != "0" && !excludedSpellsStr.empty())
         {
