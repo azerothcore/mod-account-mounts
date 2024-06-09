@@ -2,18 +2,20 @@
 #include "ScriptMgr.h"
 #include "Chat.h"
 #include "Player.h"
-#include <set>         // Required for std::set             -- might be redundant
-#include <sstream>     // Required for std::istringstream   -- might be redundant
-#include <string>      // Required for std::string          -- might be redundant
+#include <set>         // Required for std::set
+#include <sstream>     // Required for std::istringstream
+#include <string>      // Required for std::string
 
 class AccountMounts : public PlayerScript
 {
-    static const bool limitrace = true; // This set to true will only learn mounts from chars on the same team, do what you want.
+    bool limitrace; // Boolean to hold limit race option
     std::set<uint32> excludedSpellIds; // Set to hold the Spell IDs to be excluded
 
 public:
     AccountMounts() : PlayerScript("AccountMounts")
     {
+        // Retrieve limitrace option from the config file
+        limitrace = sConfigMgr->GetOption<bool>("Account.Mounts.LimitRace", false);
         // Retrieve the string of excluded Spell IDs from the config file
         std::string excludedSpellsStr = sConfigMgr->GetOption<std::string>("Account.Mounts.ExcludedSpellIDs", "");
         // Proceed only if the configuration is not "0" or empty, indicating exclusions are specified
@@ -21,16 +23,18 @@ public:
         {
             std::istringstream spellStream(excludedSpellsStr);
             std::string spellIdStr;
-            while (std::getline(spellStream, spellIdStr, ',')) {
+            while (std::getline(spellStream, spellIdStr, ','))
+            {
                 uint32 spellId = static_cast<uint32>(std::stoul(spellIdStr));
-                if (spellId != 0) { // Ensure the spell ID is not 0, as 0 is used to indicate no exclusions
+                if (spellId != 0) // Ensure the spell ID is not 0, as 0 is used to indicate no exclusions
+                {
                     excludedSpellIds.insert(spellId); // Add the Spell ID to the set of exclusions
                 }
             }
         }
     }
-    
-    void OnLogin(Player* pPlayer)
+
+    void OnLogin(Player* pPlayer) override
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))
         {
