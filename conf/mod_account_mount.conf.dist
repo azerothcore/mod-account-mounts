@@ -16,3 +16,9 @@ Account.Mounts.Announce = 0
 # Account.Mounts.ExcludedSpellIDs = 470,578,6777
 
 Account.Mounts.ExcludedSpellIDs = 0
+
+# Limit race and class specific mounts? (1: true | 0: false)
+# 0 = will allow any race/class to own other racial/class-specific mounts.
+# 1 = will enforce the limit.
+
+Account.Mounts.LimitRace = 0
