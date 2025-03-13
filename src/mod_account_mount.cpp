@@ -1,10 +1,9 @@
-#include "Config.h"
-#include "ScriptMgr.h"
 #include "Chat.h"
+#include "Config.h"
 #include "Player.h"
-#include <set>         // Required for std::set
-#include <sstream>     // Required for std::istringstream
-#include <string>      // Required for std::string
+#include <set>         // Required for std::set             -- might be redundant
+#include <sstream>     // Required for std::istringstream   -- might be redundant
+#include <string>      // Required for std::string          -- might be redundant
 
 class AccountMounts : public PlayerScript
 {
@@ -12,7 +11,9 @@ class AccountMounts : public PlayerScript
     std::set<uint32> excludedSpellIds; // Set to hold the Spell IDs to be excluded
 
 public:
-    AccountMounts() : PlayerScript("AccountMounts")
+    AccountMounts() : PlayerScript("AccountMounts", {
+        PLAYERHOOK_ON_LOGIN
+    })
     {
         // Retrieve limitrace option from the config file
         limitrace = sConfigMgr->GetOption<bool>("Account.Mounts.LimitRace", false);
@@ -27,21 +28,17 @@ public:
             {
                 uint32 spellId = static_cast<uint32>(std::stoul(spellIdStr));
                 if (spellId != 0) // Ensure the spell ID is not 0, as 0 is used to indicate no exclusions
-                {
                     excludedSpellIds.insert(spellId); // Add the Spell ID to the set of exclusions
-                }
             }
         }
     }
-
+    
     void OnLogin(Player* pPlayer) override
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))
         {
             if (sConfigMgr->GetOption<bool>("Account.Mounts.Announce", false))
-            {
                 ChatHandler(pPlayer->GetSession()).SendSysMessage("This server is running the |cff4CFF00AccountMounts |rmodule.");
-            }
 
             std::vector<uint32> Guids;
             uint32 playerAccountID = pPlayer->GetSession()->GetAccountId();
