@@ -1,6 +1,7 @@
 #include "Chat.h"
 #include "Config.h"
 #include "Player.h"
+#include "ScriptMgr.h"
 #include <set>         // Required for std::set             -- might be redundant
 #include <sstream>     // Required for std::istringstream   -- might be redundant
 #include <string>      // Required for std::string          -- might be redundant
