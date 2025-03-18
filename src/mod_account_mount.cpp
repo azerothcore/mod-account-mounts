@@ -34,7 +34,7 @@ public:
         }
     }
     
-    void OnLogin(Player* pPlayer)
+    void OnPlayerLogin(Player* pPlayer)
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))
         {
