@@ -35,7 +35,7 @@ public:
             }
         }
     }
-    
+
     void OnPlayerLogin(Player* pPlayer)
     {
         if (sConfigMgr->GetOption<bool>("Account.Mounts.Enable", true))
@@ -67,9 +67,14 @@ public:
 
             std::vector<uint32> Spells;
 
+
             for (auto& i : Guids)
             {
-                QueryResult result2 = CharacterDatabase.Query("SELECT `spell` FROM `character_spell` WHERE `guid`={};", i);
+                QueryResult result2 = CharacterDatabase.Query("SELECT character_spell.`spell` FROM `character_spell`"
+                                                              "INNER JOIN `acore_world`.`item_template` it ON it.`RequiredSkill` = {} AND it.`RequiredSkillRank`<={} AND it.`spellid_2`=character_spell.`spell`"
+                                                              "WHERE `guid`={};",
+                                                              SKILL_RIDING, pPlayer->GetBaseSkillValue(SKILL_RIDING), i
+                                                              );
                 if (!result2)
                     continue;
 
