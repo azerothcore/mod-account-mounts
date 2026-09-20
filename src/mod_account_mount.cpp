@@ -8,7 +8,8 @@
 
 class AccountMounts : public PlayerScript
 {
-    bool limitrace; // Boolean to hold limit race option
+    bool limitRace; // Boolean to hold limit race option
+    bool limitClass; // Boolean to hold limit class option
     std::set<uint32> excludedSpellIds; // Set to hold the Spell IDs to be excluded
 
 public:
@@ -16,8 +17,9 @@ public:
         PLAYERHOOK_ON_LOGIN
     })
     {
-        // Retrieve limitrace option from the config file
-        limitrace = sConfigMgr->GetOption<bool>("Account.Mounts.LimitRace", false);
+        // Retrieve limitRace / limitClass options from the config file
+        limitRace = sConfigMgr->GetOption<bool>("Account.Mounts.LimitRace", true);
+        limitClass = sConfigMgr->GetOption<bool>("Account.Mounts.LimitClass", true);
         // Retrieve the string of excluded Spell IDs from the config file
         std::string excludedSpellsStr = sConfigMgr->GetOption<std::string>("Account.Mounts.ExcludedSpellIDs", "");
         // Proceed only if the configuration is not "0" or empty, indicating exclusions are specified
@@ -43,7 +45,7 @@ public:
 
             std::vector<uint32> Guids;
             uint32 playerAccountID = pPlayer->GetSession()->GetAccountId();
-            QueryResult result1 = CharacterDatabase.Query("SELECT `guid`, `race` FROM `characters` WHERE `account`={};", playerAccountID);
+            QueryResult result1 = CharacterDatabase.Query("SELECT `guid`, `race`, `class` FROM `characters` WHERE `account`={};", playerAccountID);
 
             if (!result1)
                 return;
@@ -52,8 +54,13 @@ public:
             {
                 Field* fields = result1->Fetch();
                 uint32 race = fields[1].Get<uint8>();
+                uint32 clazz = fields[2].Get<uint8>();
 
-                if ((Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace())) || !limitrace)
+                bool push_back = true;
+                push_back &= Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace()) || !limitRace;
+                push_back &= clazz == pPlayer->getClass() || !limitClass;
+
+                if (push_back)
                     Guids.push_back(fields[0].Get<uint32>());
 
             } while (result1->NextRow());
